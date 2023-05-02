@@ -1,0 +1,31 @@
+{
+  "name": "backend-bootcamp",
+  "version": "1.0.0",
+  "description": "My nodejs project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SheydaSafiallah/Backend-Bootcamp.git"
+  },
+  "author": "SheySafiAllah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SheydaSafiallah/Backend-Bootcamp/issues"
+  },
+  "homepage": "https://github.com/SheydaSafiallah/Backend-Bootcamp#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.1.0"
+  },
+   "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
