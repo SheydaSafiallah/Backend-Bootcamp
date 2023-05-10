@@ -104,22 +104,39 @@ const url = require('url')
 // })
 
 ///////////////// load file once use it many times!
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html` , 'utf-8')
+const tempcard = fs.readFileSync(`${__dirname}/templates/template-card.html` , 'utf-8')
+const tempproduct = fs.readFileSync(`${__dirname}/templates/template-product.html` , 'utf-8')
+
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json` , 'utf-8')
+
 const dataObj = JSON.parse(data)
 const server = http.createServer((req, res)=> {
     console.log(req.url)
     // res.end('hello from the server')  //end -> simple way to send response
-    if(req.url === '/') {
-        res.end('hello from the root')
-    } else if(req.url === '/overview'){
-        res.end('hello from the overview')
+
+    //overview
+    if(req.url === '/overview' || req.url === '/'){
+        res.writeHead(200, {
+            'content-type': 'text/html'
+        })
+        res.end(tempOverview)
+
+
+    //product    
     } else if(req.url === '/product'){
-        res.end('hello from the product')   
+        res.end('hello from the product')  
+        
+        
+    //API    
     } else if(req.url === '/api'){
         res.writeHead(200, {
             'content-type': 'application/json'
         })
             res.end(data)
+
+
+    //Not found        
     }else{
         res.writeHead(404,{
             'Content-type' : 'Text/html',
