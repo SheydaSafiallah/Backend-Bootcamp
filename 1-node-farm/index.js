@@ -104,32 +104,58 @@ const url = require('url')
 // })
 
 ///////////////// load file once use it many times!
+const replaceTemplate = (temp, product) => {
+    let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName)
+    output = output.replace(/{%IMAGE%}/g, product.image)
+    output = output.replace(/{%PRICE%}/g, product.price)
+    output = output.replace(/{%FROM%}/g, product.from)
+    output = output.replace(/{%NUTRIENTS%}/g, product.nutrients)
+    output = output.replace(/{%QUANTITY%}/g, product.quantity)
+    output = output.replace(/{%DESCRIPTION%}/g, product.description)
+    output = output.replace(/{%ID%}/g, product.id)
+
+    if(! product.organic) output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic')
+    return output
+
+}
+
 const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html` , 'utf-8')
 const tempcard = fs.readFileSync(`${__dirname}/templates/template-card.html` , 'utf-8')
 const tempproduct = fs.readFileSync(`${__dirname}/templates/template-product.html` , 'utf-8')
 
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json` , 'utf-8')
-
 const dataObj = JSON.parse(data)
-const server = http.createServer((req, res)=> {
-    console.log(req.url)
-    // res.end('hello from the server')  //end -> simple way to send response
 
+const server = http.createServer((req, res)=> {
+    // console.log(req.url)
+    // res.end('hello from the server')  //end -> simple way to send response
+    console.log(url.parse(req.url, true))
+    const { query , pathname } = url.parse(req.url, true)
+    
     //overview
-    if(req.url === '/overview' || req.url === '/'){
+    if(pathname === '/overview' || pathname === '/'){
         res.writeHead(200, {
             'content-type': 'text/html'
         })
-        res.end(tempOverview)
+
+        const cardsHtml = dataObj.map( el => replaceTemplate(tempcard, el)).join('')
+        const output = tempOverview.replace('{%PRODUCT_CARD%}', cardsHtml)
+        res.end(output)
 
 
     //product    
-    } else if(req.url === '/product'){
-        res.end('hello from the product')  
+    } else if(pathname === '/product'){
+        res.writeHead(200, {
+            'content-type': 'text/html'
+        })  
+        const product = dataObj[query.id]
+        // console.log(query.id)
+        const output = replaceTemplate(tempproduct, product)
+        res.end(output)
         
         
     //API    
-    } else if(req.url === '/api'){
+    } else if(pathname === '/api'){
         res.writeHead(200, {
             'content-type': 'application/json'
         })
