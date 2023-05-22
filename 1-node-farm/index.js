@@ -124,7 +124,7 @@ const server = http.createServer((req, res)=> {
     //overview
     if(pathname === '/overview' || pathname === '/'){
         res.writeHead(200, {
-            'content-type': 'text/html'
+            'content-type': "text/html"
         })
 
         const cardsHtml = dataObj.map( el => replaceTemplate(tempcard, el)).join('')
